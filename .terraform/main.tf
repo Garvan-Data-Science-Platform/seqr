@@ -25,6 +25,14 @@ variable "region" {
   description = "region"
 }
 
+variable "location" {
+  description = "location"
+}
+
+variable "sa_email" {
+  description = "Service account email address"
+}
+
 variable "gke_username" {
   default     = ""
   description = "gke username"

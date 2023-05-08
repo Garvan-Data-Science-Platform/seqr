@@ -1,7 +1,7 @@
 resource "google_compute_disk" "seqr" {
   name  = "garvan-seqr"
   type  = "pd-ssd"
-  zone  = var.region
+  zone  = var.location
   #image = "debian-11-bullseye-v20220719"
   size = 5 #Gb
   labels = {
@@ -56,6 +56,7 @@ resource "kubernetes_deployment" "postgres" {
         App = "postgres"
       }
     }
+
     template {
       metadata {
         labels = {
@@ -77,11 +78,6 @@ resource "kubernetes_deployment" "postgres" {
             name = "POSTGRES_PASSWORD"
             value = "test-password"
           }
-          env {
-            name = "POSTGRES_DB"
-            value = "test-db"
-          }
-
           volume_mount {
             mount_path = "/var/lib/postgresql/data"
             name = "postgres-volume-mount"
