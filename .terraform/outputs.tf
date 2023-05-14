@@ -23,6 +23,6 @@ output "kubernetes_cluster_host" {
   description = "GKE Cluster Host"
 }
 
-output "lb_ip" {
-  value = kubernetes_service.nginx.status.0.load_balancer.0.ingress.0.ip
+output "load_balancer_ip" {
+  value = kubernetes_ingress_v1.gke-ingress.status.0.load_balancer.0.ingress.0.ip
 }

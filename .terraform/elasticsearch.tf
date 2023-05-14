@@ -4,7 +4,7 @@ resource "kubernetes_persistent_volume" "elasticsearch" {
   }
   spec {
     capacity = {
-      storage = "1Gi"
+      storage = "50Gi"
     }
     access_modes = ["ReadWriteOnce"]
     persistent_volume_source {
@@ -26,7 +26,7 @@ resource "kubernetes_persistent_volume_claim" "elasticsearch" {
     access_modes = ["ReadWriteOnce"]
     resources {
       requests = {
-        storage = "1Gi"
+        storage = "50Gi"
       }
     }
   }
@@ -35,7 +35,7 @@ resource "kubernetes_persistent_volume_claim" "elasticsearch" {
 resource "kubernetes_deployment" "elasticsearch" {
 
   metadata {
-    name = "es"
+    name = "elasticsearch"
   }
 
   spec {
@@ -69,7 +69,7 @@ resource "kubernetes_deployment" "elasticsearch" {
         
         container {
           image = "docker.elastic.co/elasticsearch/elasticsearch:7.16.3"
-          name  = "es"
+          name  = "elasticsearch"
           port {
             container_port = 9200
           }
@@ -107,7 +107,7 @@ resource "kubernetes_deployment" "elasticsearch" {
 
 resource "kubernetes_service" "elasticsearch" {
   metadata {
-    name = "es"
+    name = "elasticsearch"
     labels = {
         App = "es"
     }

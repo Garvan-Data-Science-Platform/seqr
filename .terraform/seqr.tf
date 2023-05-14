@@ -53,7 +53,7 @@ resource "kubernetes_deployment" "seqr" {
           }
           env {
             name = "ELASTICSEARCH_SERVICE_HOSTNAME"
-            value = "es"
+            value = "elasticsearch"
           }
           env {
             name = "REDIS_SERVICE_HOSTNAME"
@@ -102,7 +102,7 @@ resource "kubernetes_service" "seqr" {
       target_port = 8000
     }
 
-    type = "LoadBalancer"
+    type = "NodePort"
   }
 }
 

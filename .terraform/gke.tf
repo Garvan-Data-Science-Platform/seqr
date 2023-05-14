@@ -32,7 +32,7 @@ resource "google_container_node_pool" "primary_nodes" {
     service_account = var.sa_email
 
     # preemptible  = true
-    machine_type = "n1-standard-1"
+    machine_type = "e2-standard-2"
     tags         = ["gke-node", "${var.project_id}-gke"]
     metadata = {
       disable-legacy-endpoints = "true"

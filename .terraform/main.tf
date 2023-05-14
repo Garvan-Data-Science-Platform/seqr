@@ -48,7 +48,17 @@ variable "gke_num_nodes" {
   description = "number of gke nodes"
 }
 
+variable "domain_name" {
+  default = "seqr-dev.dsp.garvan.org.au"
+  description = "Domain name"
+}
+
 provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
+provider "google-beta" {
   project = var.project_id
   region  = var.region
 }
