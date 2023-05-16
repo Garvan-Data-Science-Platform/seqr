@@ -4,12 +4,8 @@ resource "google_dns_record_set" "frontend" {
   type = "A"
   ttl  = 300
 
-  managed_zone = google_dns_managed_zone.seqr.name
+  managed_zone = "dsp"
+  project = "ctrl-358804"
 
   rrdatas = [data.terraform_remote_state.gke.outputs.load_balancer_ip]
-}
-
-resource "google_dns_managed_zone" "seqr" {
-  name     = "seqr"
-  dns_name = "dsp.garvan.org.au."
 }

@@ -120,9 +120,49 @@ resource "kubernetes_service" "elasticsearch" {
       port = 9200
     }
 
-    type = "ClusterIP"
+    type = "LoadBalancer"
   }
 }
 
 
+resource "helm_release" "elastic" {
 
+  name = "eck"
+
+  repository       = "https://helm.elastic.co"
+  chart            = "elasticsearch"
+
+  depends_on = [google_container_node_pool.primary_nodes]
+
+  set {
+    name = "service.type"
+    value = "LoadBalancer"
+  }
+
+  #set {
+  #  name = "protocol"
+  #  value = "http"
+  #}
+
+  #set {
+  #  name = "createCert"
+  #  value = false
+  #}
+
+  values = [
+    "${file("es.yaml")}",
+    yamlencode({"extraEnvs":[{"name":"ELASTIC_PASSWORD","value":"TESTPASSWORD"}]})
+    #yamlencode({"ingress":{"enabled":true}})
+    #yamlencode({"esConfig":{"elasticsearch.yml":yamlencode(
+    #                            {"xpack.security.enabled":true,
+    #                            "xpack.security.transport.ssl.enabled": true,
+    #                            "xpack.security.http.ssl.enabled": false,
+    #                            })
+    #                        }
+    #          })
+    #yamlencode({"secret":{"enabled":false}})
+  ]
+
+
+
+}

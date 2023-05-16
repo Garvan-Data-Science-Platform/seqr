@@ -14,6 +14,8 @@ resource "kubernetes_deployment" "kibana" {
       metadata {
         labels = {
           App = "kibana"
+          elasticsearch-master-http-client = "true"
+          elasticsearch-master-transport-client = "true"
         }
       }
       spec {
@@ -25,7 +27,7 @@ resource "kubernetes_deployment" "kibana" {
           }
           env {
             name = "ELASTICSEARCH_HOSTS"
-            value = "http://es:9200"
+            value = "https://elasticsearch-master:9200"
           }
 
         }

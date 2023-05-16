@@ -53,7 +53,19 @@ resource "kubernetes_deployment" "seqr" {
           }
           env {
             name = "ELASTICSEARCH_SERVICE_HOSTNAME"
-            value = "elasticsearch"
+            value = "elasticsearch-master"
+          }
+          env {
+            name = "ELASTICSEARCH_PROTOCOL"
+            value = "https"
+          }
+          env {
+            name = "ELASTICSEARCH_CA_PATH"
+            value = "/seqr/cert"
+          }
+          env {
+            name = "SEQR_ES_PASSWORD"
+            value = "TESTPASSWORD"
           }
           env {
             name = "REDIS_SERVICE_HOSTNAME"
