@@ -1,3 +1,4 @@
+#This code must be run seperately to generate certificates for use with elasticsearch
 ELASTICSEARCH_IMAGE="docker.elastic.co/elasticsearch/elasticsearch:8.5.1"
 
 docker pull $ELASTICSEARCH_IMAGE

@@ -1,7 +1,11 @@
+
+
 resource "kubernetes_deployment" "seqr" {
   metadata {
     name = "seqr"
   }
+
+
 
   spec {
     replicas = 1
@@ -17,12 +21,24 @@ resource "kubernetes_deployment" "seqr" {
         }
       }
       spec {
+        volume {
+          name = "secret-volume"
+          secret  {
+            secret_name = "elastic-certificate-crt"
+          }
+        }
         container {
           image = "gcr.io/seqr-dev-385323/seqr:latest"
           name  = "seqr"
           port {
             container_port = 8000
           }
+          volume_mount  {
+              name = "secret-volume"
+              mount_path = "/etc/secret-volume"
+              read_only = true
+          }
+          
           env {
             name = "SEQR_GIT_BRANCH"
             value = "dev"
@@ -61,7 +77,7 @@ resource "kubernetes_deployment" "seqr" {
           }
           env {
             name = "ELASTICSEARCH_CA_PATH"
-            value = "/seqr/cert"
+            value = "/etc/secret-volume/"
           }
           env {
             name = "SEQR_ES_PASSWORD"
