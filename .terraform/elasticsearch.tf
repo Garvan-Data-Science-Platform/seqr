@@ -1,3 +1,41 @@
+
+resource "helm_release" "elastic" {
+
+  name = "eck"
+
+  repository       = "https://helm.elastic.co"
+  chart            = "elasticsearch"
+  #version          = "7.16.3"
+
+  depends_on = [google_container_node_pool.primary_nodes]
+
+  set {
+    name = "imageTag"
+    value = "7.16.3"
+  }
+  set{
+    name = "esMajorVersion"
+    value = 7
+  }
+  set {
+    name = "service.type"
+    value = "LoadBalancer"
+  }
+
+  set {
+    name = "replicas"
+    value = 6
+  }
+
+  values = [
+    "${file("es.yaml")}",
+    yamlencode({"extraEnvs":[{"name":"ELASTIC_PASSWORD","value":data.google_secret_manager_secret_version.ESPASSWORD.secret_data}]})
+  ]
+
+}
+
+
+/*
 resource "kubernetes_persistent_volume" "elasticsearch" {
   metadata {
     name = "es-pv"
@@ -123,46 +161,4 @@ resource "kubernetes_service" "elasticsearch" {
     type = "LoadBalancer"
   }
 }
-
-
-resource "helm_release" "elastic" {
-
-  name = "eck"
-
-  repository       = "https://helm.elastic.co"
-  chart            = "elasticsearch"
-
-  depends_on = [google_container_node_pool.primary_nodes]
-
-  set {
-    name = "service.type"
-    value = "LoadBalancer"
-  }
-
-  #set {
-  #  name = "protocol"
-  #  value = "http"
-  #}
-
-  #set {
-  #  name = "createCert"
-  #  value = false
-  #}
-
-  values = [
-    "${file("es.yaml")}",
-    yamlencode({"extraEnvs":[{"name":"ELASTIC_PASSWORD","value":"TESTPASSWORD"}]})
-    #yamlencode({"ingress":{"enabled":true}})
-    #yamlencode({"esConfig":{"elasticsearch.yml":yamlencode(
-    #                            {"xpack.security.enabled":true,
-    #                            "xpack.security.transport.ssl.enabled": true,
-    #                            "xpack.security.http.ssl.enabled": false,
-    #                            })
-    #                        }
-    #          })
-    #yamlencode({"secret":{"enabled":false}})
-  ]
-
-
-
-}
+*/

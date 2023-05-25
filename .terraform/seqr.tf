@@ -1,11 +1,7 @@
-
-
 resource "kubernetes_deployment" "seqr" {
   metadata {
     name = "seqr"
   }
-
-
 
   spec {
     replicas = 1
@@ -24,7 +20,7 @@ resource "kubernetes_deployment" "seqr" {
         volume {
           name = "secret-volume"
           secret  {
-            secret_name = "elastic-certificate-crt"
+            secret_name = "elastic-certificate-pem"
           }
         }
         container {
@@ -61,11 +57,11 @@ resource "kubernetes_deployment" "seqr" {
           }
           env {
             name = "POSTGRES_USERNAME"
-            value = "test-user"
+            value = "seqr-user"
           }
           env {
             name = "POSTGRES_PASSWORD"
-            value = "test-password"
+            value = data.google_secret_manager_secret_version.PGPASSWORD.secret_data
           }
           env {
             name = "ELASTICSEARCH_SERVICE_HOSTNAME"
@@ -77,11 +73,11 @@ resource "kubernetes_deployment" "seqr" {
           }
           env {
             name = "ELASTICSEARCH_CA_PATH"
-            value = "/etc/secret-volume/"
+            value = "/etc/secret-volume/elastic-certificate.pem"
           }
           env {
             name = "SEQR_ES_PASSWORD"
-            value = "TESTPASSWORD"
+            value = data.google_secret_manager_secret_version.ESPASSWORD.secret_data
           }
           env {
             name = "REDIS_SERVICE_HOSTNAME"
@@ -101,7 +97,7 @@ resource "kubernetes_deployment" "seqr" {
           }
           env {
             name = "PGUSER"
-            value = "test-user"
+            value = "seqr-user"
           }
           env {
             name = "GUNICORN_WORKER_THREADS"

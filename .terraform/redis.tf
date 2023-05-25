@@ -59,7 +59,7 @@ resource "kubernetes_deployment" "redis" {
           }
           env {
             name = "POSTGRES_USER"
-            value = "test-user"
+            value = "seqr-user"
           }
 
           volume_mount {

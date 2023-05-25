@@ -72,11 +72,11 @@ resource "kubernetes_deployment" "postgres" {
           }
           env {
             name = "POSTGRES_USER"
-            value = "test-user"
+            value = "seqr-user"
           }
           env {
             name = "POSTGRES_PASSWORD"
-            value = "test-password"
+            value = data.google_secret_manager_secret_version.PGPASSWORD.secret_data
           }
           volume_mount {
             mount_path = "/var/lib/postgresql/data"

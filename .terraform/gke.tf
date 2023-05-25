@@ -11,6 +11,11 @@ resource "google_container_cluster" "primary" {
 
   network    = google_compute_network.vpc.name
   subnetwork = google_compute_subnetwork.subnet.name
+
+
+  provisioner "local-exec" {
+    command = "es_cert_setup.sh"
+  }
 }
 
 # Separately Managed Node Pool

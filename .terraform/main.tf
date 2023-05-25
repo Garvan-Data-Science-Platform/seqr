@@ -64,3 +64,13 @@ provider "google-beta" {
   project = var.project_id
   region  = var.region
 }
+
+data "google_secret_manager_secret_version" "ESPASSWORD" {
+  provider = google-beta
+  secret = "ESPASSWORD"
+}
+
+data "google_secret_manager_secret_version" "PGPASSWORD" {
+  provider = google-beta
+  secret = "PGPASSWORD"
+}

@@ -11,6 +11,12 @@ roles:
 
 protocol: https
 
+volumeClaimTemplate:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 200Gi
+
 esConfig:
   elasticsearch.yml: |
     xpack.security.enabled: true
