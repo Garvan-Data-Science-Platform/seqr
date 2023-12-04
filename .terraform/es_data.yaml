@@ -1,13 +1,14 @@
 ---
 clusterName: "elasticsearch"
-nodeGroup: "master"
+nodeGroup: "data"
 
 createCert: false
 
 roles:
-  - master
   - ingest
   - data
+
+replicas: 4
 
 protocol: https
 
@@ -15,7 +16,15 @@ volumeClaimTemplate:
   accessModes: ["ReadWriteOnce"]
   resources:
     requests:
-      storage: 200Gi
+      storage: 150Gi
+
+resources:
+  requests:
+    cpu: "1500m"
+    memory: "5Gi"
+  limits:
+    cpu: "1500m"
+    memory: "5Gi"
 
 esConfig:
   elasticsearch.yml: |

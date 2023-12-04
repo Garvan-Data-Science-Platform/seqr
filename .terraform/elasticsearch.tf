@@ -1,7 +1,7 @@
 
-resource "helm_release" "elastic" {
+resource "helm_release" "elastic_master" {
 
-  name = "eck"
+  name = "esmaster"
 
   repository       = "https://helm.elastic.co"
   chart            = "elasticsearch"
@@ -11,29 +11,59 @@ resource "helm_release" "elastic" {
 
   set {
     name = "imageTag"
-    value = "7.16.3"
+    value = "latest"
   }
   set{
     name = "esMajorVersion"
     value = 7
   }
+  set{
+    name = "image"
+    value = "gcr.io/seqr-dev-385323/elasticsearch-gcs"
+  }
   set {
     name = "service.type"
     value = "LoadBalancer"
   }
-
-  set {
-    name = "replicas"
-    value = 6
-  }
-
   values = [
-    "${file("es.yaml")}",
+    "${file("es_master.yaml")}",
     yamlencode({"extraEnvs":[{"name":"ELASTIC_PASSWORD","value":data.google_secret_manager_secret_version.ESPASSWORD.secret_data}]})
   ]
 
 }
 
+resource "helm_release" "elastic_data" {
+
+  name = "esdata"
+
+  repository       = "https://helm.elastic.co"
+  chart            = "elasticsearch"
+  #version          = "7.16.3"
+
+  depends_on = [google_container_node_pool.primary_nodes]
+
+  set {
+    name = "imageTag"
+    value = "latest"
+  }
+  set{
+    name = "esMajorVersion"
+    value = 7
+  }
+  set{
+    name = "image"
+    value = "gcr.io/seqr-dev-385323/elasticsearch-gcs"
+  }
+  set {
+    name = "service.type"
+    value = "LoadBalancer"
+  }
+  values = [
+    "${file("es_data.yaml")}",
+    yamlencode({"extraEnvs":[{"name":"ELASTIC_PASSWORD","value":data.google_secret_manager_secret_version.ESPASSWORD.secret_data}]})
+  ]
+
+}
 
 /*
 resource "kubernetes_persistent_volume" "elasticsearch" {
