@@ -13,9 +13,9 @@ resource "google_container_cluster" "primary" {
   subnetwork = google_compute_subnetwork.subnet.name
 
 
-  provisioner "local-exec" {
-    command = "es_cert_setup.sh"
-  }
+  #provisioner "local-exec" {
+  #  command = "${path.module}/es_cert_setup.sh"
+  #}
 }
 
 # Separately Managed Node Pool
@@ -57,7 +57,7 @@ data "terraform_remote_state" "gke" {
 data "google_client_config" "default" {}
 
 provider "kubernetes" {
-  host = data.terraform_remote_state.gke.outputs.kubernetes_cluster_host
+  host = google_container_cluster.primary.endpoint
  
   token                  = data.google_client_config.default.access_token
   cluster_ca_certificate = base64decode(google_container_cluster.primary.master_auth[0].cluster_ca_certificate)
@@ -65,7 +65,7 @@ provider "kubernetes" {
 
 provider "helm" {
   kubernetes {
-    host = data.terraform_remote_state.gke.outputs.kubernetes_cluster_host
+    host = google_container_cluster.primary.endpoint
     token                  = data.google_client_config.default.access_token
     cluster_ca_certificate = base64decode(google_container_cluster.primary.master_auth[0].cluster_ca_certificate)
   }

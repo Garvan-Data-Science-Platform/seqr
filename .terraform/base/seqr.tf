@@ -61,7 +61,7 @@ resource "kubernetes_deployment" "seqr" {
           }
           env {
             name = "POSTGRES_PASSWORD"
-            value = data.google_secret_manager_secret_version.PGPASSWORD.secret_data
+            value = data.google_secret_manager_secret_version.postgres_password.secret_data
           }
           env {
             name = "ELASTICSEARCH_SERVICE_HOSTNAME"
@@ -77,7 +77,7 @@ resource "kubernetes_deployment" "seqr" {
           }
           env {
             name = "SEQR_ES_PASSWORD"
-            value = data.google_secret_manager_secret_version.ESPASSWORD.secret_data
+            value = data.google_secret_manager_secret_version.es_password.secret_data
           }
           env {
             name = "REDIS_SERVICE_HOSTNAME"

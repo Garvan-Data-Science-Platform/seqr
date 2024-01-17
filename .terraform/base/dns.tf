@@ -1,6 +1,6 @@
 
 resource "google_dns_record_set" "frontend" {
-  name = "${var.domain_name}."
+  name = "${var.subdomain}.dsp.garvan.org.au."
   type = "A"
   ttl  = 300
 

@@ -15,7 +15,7 @@ volumeClaimTemplate:
     requests:
       storage: 5Gi
 
-replicas: 2
+replicas: 3
 
 resources:
   requests:

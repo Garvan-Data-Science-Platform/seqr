@@ -4,7 +4,7 @@ terraform {
   required_providers {
     google = {
       source  = "hashicorp/google"
-      version = "4.51.0"
+      version = "5.5.0"
     }
     kubernetes = {
       source  = "hashicorp/helm"
@@ -12,10 +12,6 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = ">= 2.0.1"
     }
-  }
-  backend "gcs" {
-    bucket = "terraform-state-seqr"
-    prefix = "dev"
   }
 }
 
@@ -50,9 +46,12 @@ variable "gke_num_nodes" {
   description = "number of gke nodes"
 }
 
-variable "domain_name" {
-  default = "seqr-dev.dsp.garvan.org.au"
-  description = "Domain name"
+variable "subdomain" {
+  description = "****.dsp.garvan.org.au"
+}
+
+variable "env" {
+  description = "Name of environment to deploy"
 }
 
 provider "google" {
@@ -63,14 +62,4 @@ provider "google" {
 provider "google-beta" {
   project = var.project_id
   region  = var.region
-}
-
-data "google_secret_manager_secret_version" "ESPASSWORD" {
-  provider = google-beta
-  secret = "ESPASSWORD"
-}
-
-data "google_secret_manager_secret_version" "PGPASSWORD" {
-  provider = google-beta
-  secret = "PGPASSWORD"
 }

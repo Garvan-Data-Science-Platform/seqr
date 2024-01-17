@@ -3,7 +3,7 @@ resource "google_compute_managed_ssl_certificate" "lb_default" {
   name     = "seqr-dev-ssl-cert"
 
   managed {
-    domains = [var.domain_name]
+    domains = ["${var.subdomain}.dsp.garvan.org.au"]
   }
 }
 
