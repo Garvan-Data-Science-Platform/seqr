@@ -12,7 +12,8 @@ permissions:
 
 jobs:
   docker:
-    runs-on: ubuntu-latest
+    runs-on:
+      group: "Cabana-CICD"
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: checkout
