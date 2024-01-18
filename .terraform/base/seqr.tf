@@ -1,19 +1,19 @@
 resource "kubernetes_deployment" "seqr" {
   metadata {
-    name = "seqr"
+    name = "seqr-${var.env}"
   }
 
   spec {
     replicas = 1
     selector {
       match_labels = {
-        App = "seqr"
+        App = "seqr-${var.env}"
       }
     }
     template {
       metadata {
         labels = {
-          App = "seqr"
+          App = "seqr-${var.env}"
         }
       }
       spec {
@@ -24,7 +24,7 @@ resource "kubernetes_deployment" "seqr" {
           }
         }
         container {
-          image = "gcr.io/seqr-dev-385323/seqr:latest"
+          image = "australia-southeast1-docker.pkg.dev/dsp-registry-410602/docker/seqr:latest"
           name  = "seqr"
           port {
             container_port = 8000
@@ -49,7 +49,7 @@ resource "kubernetes_deployment" "seqr" {
           }
           env {
             name = "POSTGRES_SERVICE_HOSTNAME"
-            value = "postgres"
+            value = "postgres-prod-postgresql"
           }
           env {
             name = "POSTGRES_SERVICE_PORT"
@@ -89,7 +89,7 @@ resource "kubernetes_deployment" "seqr" {
           }
           env {
             name = "PGHOST"
-            value = "postgres"
+            value = "postgres-prod-postgresql"
           }
           env {
             name = "PGPORT"
@@ -110,16 +110,29 @@ resource "kubernetes_deployment" "seqr" {
   }
 }
 
+resource "google_compute_global_address" "seqr-static" {
+  name = "ipv4-address-api-${var.env}"
+}
+
+data "google_compute_global_address" "seqr-static" {
+  depends_on = [google_compute_global_address.seqr-static]
+  name = "ipv4-address-api-${var.env}"
+}
+
 resource "kubernetes_service" "seqr" {
+  
   metadata {
-    name = "seqr"
+    annotations = {
+      "cloud.google.com/neg": "{\"ingress\": true}",
+    }
+    name = "seqr-${var.env}"
     labels = {
-        App = "seqr"
+        App = "seqr-${var.env}"
     }
   }
   spec {
     selector = {
-      App = "seqr"
+      App = "seqr-${var.env}" #This should match the kubernetes deployment
     }
     port {
       port = 80
@@ -130,5 +143,37 @@ resource "kubernetes_service" "seqr" {
   }
 }
 
+resource "kubernetes_ingress_v1" "gke-ingress" {
+  wait_for_load_balancer = true
+  metadata {
+    name = "gke-ingress"
+    annotations = {
+        "kubernetes.io/ingress.global-static-ip-name"=google_compute_global_address.seqr-static.name
+        "kubernetes.io/ingress.class"="gce"
+        "ingress.gcp.kubernetes.io/pre-shared-cert"=google_compute_managed_ssl_certificate.lb_default.name
+    }
+  }
 
+  spec {
+    default_backend {
+      service {
+        name = "seqr-${var.env}"
+        port {
+          number = 80
+        }
+      }
+    }
+  }
+}
 
+resource "google_dns_record_set" "seqr" {
+
+  name = "${var.subdomain}.dsp.garvan.org.au."
+  type = "A"
+  ttl  = 300
+
+  managed_zone = "dsp"
+  project = "ctrl-358804"
+
+  rrdatas = [coalesce(data.google_compute_global_address.seqr-static.address,"1.1.1.1")]
+}

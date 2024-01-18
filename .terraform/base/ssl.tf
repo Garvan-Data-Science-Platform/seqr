@@ -1,6 +1,6 @@
 resource "google_compute_managed_ssl_certificate" "lb_default" {
   provider = google-beta
-  name     = "seqr-dev-ssl-cert"
+  name     = "seqr-${var.env}-ssl-cert"
 
   managed {
     domains = ["${var.subdomain}.dsp.garvan.org.au"]

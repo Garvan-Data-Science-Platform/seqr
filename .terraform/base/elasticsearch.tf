@@ -19,7 +19,7 @@ resource "helm_release" "elastic_master" {
   }
   set{
     name = "image"
-    value = "gcr.io/seqr-dev-385323/elasticsearch-gcs"
+    value = "australia-southeast1-docker.pkg.dev/dsp-registry-410602/docker/elasticsearch-gcs"
   }
   set {
     name = "service.type"
@@ -52,7 +52,7 @@ resource "helm_release" "elastic_data" {
   }
   set{
     name = "image"
-    value = "gcr.io/seqr-dev-385323/elasticsearch-gcs"
+    value = "australia-southeast1-docker.pkg.dev/dsp-registry-410602/docker/elasticsearch-gcs"
   }
   set {
     name = "service.type"

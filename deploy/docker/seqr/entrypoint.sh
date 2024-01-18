@@ -57,6 +57,7 @@ done
 
 # init and populate seqrdb unless it already exists
 if ! psql --host "$POSTGRES_SERVICE_HOSTNAME" -U "$POSTGRES_USERNAME" -l | grep seqrdb; then
+    createdb
     psql --host "$POSTGRES_SERVICE_HOSTNAME" -U "$POSTGRES_USERNAME" -c 'CREATE DATABASE reference_data_db';
     psql --host "$POSTGRES_SERVICE_HOSTNAME" -U "$POSTGRES_USERNAME" -c 'CREATE DATABASE seqrdb';
     python -u manage.py migrate
