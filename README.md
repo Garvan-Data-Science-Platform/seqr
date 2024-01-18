@@ -9,8 +9,6 @@ git fetch upstream
 git merge upstream/master
 ```
 
-.
-
 # seqr
 
 ![Unit Tests](https://github.com/broadinstitute/seqr/workflows/Unit%20Tests/badge.svg?branch=master) | ![Local Install Tests](https://github.com/broadinstitute/seqr/workflows/local%20install%20tests/badge.svg?branch=master)
