@@ -1,4 +1,4 @@
-##Garvan notes
+## Garvan notes
 
 To sync with Broad version of seqr, merge the master branch of Broad seqr with dev branch of Garvan seqr:
 
