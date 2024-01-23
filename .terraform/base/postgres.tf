@@ -4,13 +4,16 @@ resource "helm_release" "postgres" {
 
   #repository       = "https://helm.elastic.co"
   chart            = "oci://registry-1.docker.io/bitnamicharts/postgresql"
-  #version          = "7.16.3"
 
   depends_on = [google_container_node_pool.primary_nodes]
 
   set {
     name = "auth.password"
     value = data.google_secret_manager_secret_version.postgres_password.secret_data
+  }
+  set {
+    name = "image.tag"
+    value = "14"
   }
   #set {
   #  name = "auth.database"
