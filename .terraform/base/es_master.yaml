@@ -15,8 +15,6 @@ volumeClaimTemplate:
     requests:
       storage: 5Gi
 
-replicas: 3
-
 resources:
   requests:
     cpu: "500m"

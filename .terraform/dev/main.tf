@@ -26,7 +26,8 @@ module "base" {
     sa_email = "tk-service-account@seqr-dev-385323.iam.gserviceaccount.com"
     env = "dev"
     subdomain = "seqr-dev"
-    gke_num_nodes = 7
+    es_master_nodes = 1
+    es_data_nodes = 1
 }
 
 output "kubernetes_cluster_name" {

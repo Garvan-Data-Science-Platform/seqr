@@ -25,8 +25,13 @@ resource "helm_release" "elastic_master" {
     name = "service.type"
     value = "LoadBalancer"
   }
+  set {
+    name = "replicas"
+    value = var.es_master_nodes
+  }
   values = [
     "${file("${path.module}/es_master.yaml")}",
+
     yamlencode({"extraEnvs":[{"name":"ELASTIC_PASSWORD","value":data.google_secret_manager_secret_version.es_password.secret_data}]})
   ]
 
@@ -40,7 +45,7 @@ resource "helm_release" "elastic_data" {
   chart            = "elasticsearch"
   #version          = "7.16.3"
 
-  depends_on = [google_container_node_pool.primary_nodes]
+  depends_on = [google_container_node_pool.data_nodes]
 
   set {
     name = "imageTag"
@@ -57,6 +62,10 @@ resource "helm_release" "elastic_data" {
   set {
     name = "service.type"
     value = "LoadBalancer"
+  }
+  set {
+    name = "replicas"
+    value = var.es_data_nodes
   }
   values = [
     "${file("${path.module}/es_data.yaml")}",

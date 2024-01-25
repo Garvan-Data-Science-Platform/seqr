@@ -8,8 +8,6 @@ roles:
   - ingest
   - data
 
-replicas: 4
-
 protocol: https
 
 volumeClaimTemplate:
@@ -20,11 +18,15 @@ volumeClaimTemplate:
 
 resources:
   requests:
-    cpu: "1500m"
+    cpu: "1"
     memory: "5Gi"
   limits:
-    cpu: "1500m"
+    cpu: "32"
     memory: "5Gi"
+
+tolerations:
+  - key: "dataonly"
+    value: "true"
 
 esConfig:
   elasticsearch.yml: |
@@ -36,6 +38,8 @@ esConfig:
     xpack.security.http.ssl.enabled: true
     xpack.security.http.ssl.truststore.path: /usr/share/elasticsearch/config/certs/elastic-certificates.p12
     xpack.security.http.ssl.keystore.path: /usr/share/elasticsearch/config/certs/elastic-certificates.p12
+
+clusterHealthCheckParams: "timeout=1s"
 
 secretMounts:
   - name: elastic-certificates

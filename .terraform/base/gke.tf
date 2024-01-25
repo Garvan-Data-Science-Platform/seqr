@@ -23,7 +23,7 @@ resource "google_container_node_pool" "primary_nodes" {
   name       = google_container_cluster.primary.name
   location   = var.location
   cluster    = google_container_cluster.primary.name
-  node_count = var.gke_num_nodes
+  node_count = var.es_master_nodes
 
   node_config {
     oauth_scopes = [
@@ -38,6 +38,41 @@ resource "google_container_node_pool" "primary_nodes" {
 
     # preemptible  = true
     machine_type = "e2-standard-2"
+    disk_size_gb = 20
+    tags         = ["gke-node", "${var.project_id}-gke"]
+    metadata = {
+      disable-legacy-endpoints = "true"
+    }
+  }
+}
+
+# Separately Managed Node Pool
+resource "google_container_node_pool" "data_nodes" {
+  name       = "dsp-seqr-gke-data"
+  location   = var.location
+  cluster    = google_container_cluster.primary.name
+  node_count = var.es_data_nodes
+
+  node_config {
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+
+    labels = {
+      env = var.project_id
+      type = "data"
+    }
+
+    taint {
+      key = "dataonly"
+      value = "true"
+      effect = "NO_SCHEDULE"
+    }
+
+    service_account = var.sa_email
+
+    # preemptible  = true
+    machine_type = var.es_data_machine
     disk_size_gb = 20
     tags         = ["gke-node", "${var.project_id}-gke"]
     metadata = {

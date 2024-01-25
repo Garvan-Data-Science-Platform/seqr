@@ -18,5 +18,5 @@ openssl pkcs12 -nodes -passin pass:'' -in elastic-certificates.p12 -out elastic-
 openssl x509 -outform der -in elastic-certificate.pem -out elastic-certificate.crt && \
 kubectl create secret generic elastic-certificates --from-file=elastic-certificates.p12 || true && \
 kubectl create secret generic elastic-certificate-pem --from-file=elastic-certificate.pem || true && \
-kubectl create secret generic elastic-certificate-crt --from-file=elastic-certificate.crt || true && \
-rm -f elastic-certificates.p12 elastic-certificate.pem elastic-certificate.crt elastic-stack-ca.p12
+kubectl create secret generic elastic-certificate-crt --from-file=elastic-certificate.crt || true
+#rm -f elastic-certificates.p12 elastic-certificate.pem elastic-certificate.crt elastic-stack-ca.p12

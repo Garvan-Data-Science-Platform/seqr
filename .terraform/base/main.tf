@@ -41,9 +41,16 @@ variable "gke_password" {
   description = "gke password"
 }
 
-variable "gke_num_nodes" {
-  default     = 2
-  description = "number of gke nodes"
+variable "es_master_nodes" {
+  default = 3
+}
+
+variable "es_data_nodes" {
+  default = 4
+}
+
+variable "es_data_machine" {
+  default = "e2-standard-2"
 }
 
 variable "subdomain" {

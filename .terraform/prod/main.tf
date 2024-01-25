@@ -26,7 +26,10 @@ module "base" {
     sa_email = "seqr-prod-sa@dsp-seqr.iam.gserviceaccount.com"
     env = "prod"
     subdomain = "seqr"
-    gke_num_nodes = 7
+    es_master_nodes = 3
+    es_data_nodes = 4
+    #es_data_machine = "e2-standard-2"
+    es_data_machine = "e2-highcpu-32"
 }
 
 output "kubernetes_cluster_name" {
