@@ -49,7 +49,7 @@ resource "kubernetes_deployment" "seqr" {
           }
           env {
             name = "POSTGRES_SERVICE_HOSTNAME"
-            value = "postgres-prod-postgresql"
+            value = "postgres-${var.env}-postgresql"
           }
           env {
             name = "POSTGRES_SERVICE_PORT"
@@ -89,7 +89,7 @@ resource "kubernetes_deployment" "seqr" {
           }
           env {
             name = "PGHOST"
-            value = "postgres-prod-postgresql"
+            value = "postgres-${var.env}-postgresql"
           }
           env {
             name = "PGPORT"

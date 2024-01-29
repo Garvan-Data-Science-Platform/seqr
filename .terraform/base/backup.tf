@@ -45,7 +45,7 @@ resource "kubernetes_deployment" "backup" {
           }
           env {
             name = "DB_LS"
-            value = "seqrdb,reference_data_db"
+            value = "seqrdb"
           }
         }
       }
