@@ -12,7 +12,6 @@ resource "google_container_cluster" "primary" {
   network    = google_compute_network.vpc.name
   subnetwork = google_compute_subnetwork.subnet.name
 
-
   #provisioner "local-exec" {
   #  command = "${path.module}/es_cert_setup.sh"
   #}
@@ -73,6 +72,48 @@ resource "google_container_node_pool" "data_nodes" {
 
     # preemptible  = true
     machine_type = var.es_data_machine
+    disk_size_gb = 20
+    tags         = ["gke-node", "${var.project_id}-gke"]
+    metadata = {
+      disable-legacy-endpoints = "true"
+    }
+  }
+}
+
+# Separately Managed Node Pool
+resource "google_container_node_pool" "loading_nodes" {
+  name       = "dsp-seqr-gke-loading"
+  location   = var.location
+  cluster    = google_container_cluster.primary.name
+  node_count = var.es_data_nodes
+  
+  autoscaling {
+    min_node_count = 0
+    max_node_count = var.es_data_nodes
+  }
+
+  node_config {
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+
+    labels = {
+      env = var.project_id
+      type = "data"
+    }
+
+    taint {
+      key = "dataonly"
+      value = "true"
+      effect = "NO_SCHEDULE"
+    }
+
+    service_account = var.sa_email
+
+
+
+    # preemptible  = true
+    machine_type = "e2-highcpu-32"
     disk_size_gb = 20
     tags         = ["gke-node", "${var.project_id}-gke"]
     metadata = {

@@ -28,8 +28,8 @@ module "base" {
     subdomain = "seqr"
     es_master_nodes = 3
     es_data_nodes = 4
-    #es_data_machine = "e2-standard-2"
-    es_data_machine = "e2-highcpu-32"
+    es_data_machine = "e2-standard-2"
+    #es_data_machine = "e2-highcpu-32"
 }
 
 output "kubernetes_cluster_name" {
