@@ -110,14 +110,6 @@ resource "kubernetes_deployment" "seqr" {
   }
 }
 
-resource "google_compute_global_address" "seqr-static" {
-  name = "ipv4-address-api-${var.env}"
-}
-
-data "google_compute_global_address" "seqr-static" {
-  depends_on = [google_compute_global_address.seqr-static]
-  name = "ipv4-address-api-${var.env}"
-}
 
 resource "kubernetes_service" "seqr" {
   
@@ -143,37 +135,5 @@ resource "kubernetes_service" "seqr" {
   }
 }
 
-resource "kubernetes_ingress_v1" "gke-ingress" {
-  wait_for_load_balancer = true
-  metadata {
-    name = "gke-ingress"
-    annotations = {
-        "kubernetes.io/ingress.global-static-ip-name"=google_compute_global_address.seqr-static.name
-        "kubernetes.io/ingress.class"="gce"
-        "ingress.gcp.kubernetes.io/pre-shared-cert"=google_compute_managed_ssl_certificate.lb_default.name
-    }
-  }
 
-  spec {
-    default_backend {
-      service {
-        name = "seqr-${var.env}"
-        port {
-          number = 80
-        }
-      }
-    }
-  }
-}
 
-resource "google_dns_record_set" "seqr" {
-
-  name = "${var.subdomain}.dsp.garvan.org.au."
-  type = "A"
-  ttl  = 300
-
-  managed_zone = "dsp"
-  project = "ctrl-358804"
-
-  rrdatas = [coalesce(data.google_compute_global_address.seqr-static.address,"1.1.1.1")]
-}

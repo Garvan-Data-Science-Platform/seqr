@@ -79,18 +79,13 @@ resource "google_container_node_pool" "data_nodes" {
     }
   }
 }
-
+/*
 # Separately Managed Node Pool
 resource "google_container_node_pool" "loading_nodes" {
   name       = "dsp-seqr-gke-loading"
   location   = var.location
   cluster    = google_container_cluster.primary.name
-  node_count = var.es_data_nodes
-  
-  autoscaling {
-    min_node_count = 0
-    max_node_count = var.es_data_nodes
-  }
+  node_count = 0
 
   node_config {
     oauth_scopes = [
@@ -121,7 +116,7 @@ resource "google_container_node_pool" "loading_nodes" {
     }
   }
 }
-
+*/
 data "terraform_remote_state" "gke" {
   backend = "gcs"
   config={
