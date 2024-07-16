@@ -11,18 +11,18 @@ resource "google_dns_record_set" "seqr" {
 }
 
 resource "google_compute_global_address" "seqr-static" {
-  name = "ipv4-address-api-prod"
+  name = "ipv4-address-api-prod-2"
 }
 
 data "google_compute_global_address" "seqr-static" {
   depends_on = [google_compute_global_address.seqr-static]
-  name = "ipv4-address-api-prod"
+  name = "ipv4-address-api-prod-2"
 }
 
 resource "kubernetes_ingress_v1" "gke-ingress" {
   wait_for_load_balancer = true
   metadata {
-    name = "gke-ingress"
+    name = "gke-ingress-prod"
     annotations = {
         "kubernetes.io/ingress.global-static-ip-name"=google_compute_global_address.seqr-static.name
         "kubernetes.io/ingress.class"="gce"

@@ -46,3 +46,11 @@ provider "google-beta" {
   project = module.base.project_id
   region  = module.base.region
 }
+
+data "google_client_config" "default" {}
+
+provider "kubernetes" {
+  host = module.base.kubernetes_cluster_host
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = module.base.cluster_ca
+}
