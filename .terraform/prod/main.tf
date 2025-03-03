@@ -27,7 +27,7 @@ module "base" {
     env = "prod"
     subdomain = "seqr"
     es_master_nodes = 3
-    es_data_nodes = 2
+    es_data_nodes = 1
     es_data_machine = "e2-highmem-4"
     #es_data_machine = "e2-highcpu-32"
 }

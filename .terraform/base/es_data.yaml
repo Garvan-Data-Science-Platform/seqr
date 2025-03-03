@@ -14,7 +14,7 @@ volumeClaimTemplate:
   accessModes: ["ReadWriteOnce"]
   resources:
     requests:
-      storage: 300Gi
+      storage: 1000Gi
 
 resources:
   requests:
@@ -39,7 +39,7 @@ esConfig:
     xpack.security.http.ssl.truststore.path: /usr/share/elasticsearch/config/certs/elastic-certificates.p12
     xpack.security.http.ssl.keystore.path: /usr/share/elasticsearch/config/certs/elastic-certificates.p12
 
-clusterHealthCheckParams: "timeout=1s"
+clusterHealthCheckParams: "wait_for_status=yellow&timeout=1s"
 
 secretMounts:
   - name: elastic-certificates

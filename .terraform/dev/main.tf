@@ -28,6 +28,7 @@ module "base" {
     subdomain = "seqr-dev"
     es_master_nodes = 1
     es_data_nodes = 1
+    es_data_machine = "e2-highmem-4"
 }
 
 output "kubernetes_cluster_name" {

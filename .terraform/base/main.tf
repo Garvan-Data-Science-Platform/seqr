@@ -50,7 +50,7 @@ variable "es_data_nodes" {
 }
 
 variable "es_data_machine" {
-  default = "e2-standard-2"
+  default = "e2-highmem-2"
 }
 
 variable "subdomain" {
