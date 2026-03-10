@@ -15,6 +15,10 @@ resource "helm_release" "postgres" {
     name = "image.tag"
     value = "14"
   }
+  set {
+    name = "image.repository"
+    value = "bitnamilegacy/postgresql"
+  }
   #set {
   #  name = "auth.database"
   #  value = "django"

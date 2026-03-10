@@ -32,6 +32,10 @@ resource "google_container_node_pool" "primary_nodes" {
     labels = {
       env = var.project_id
     }
+    
+    kubelet_config {
+      cpu_manager_policy = "none" # Default value
+    }
 
     service_account = var.sa_email
 
@@ -52,6 +56,8 @@ resource "google_container_node_pool" "data_nodes" {
   cluster    = google_container_cluster.primary.name
   node_count = var.es_data_nodes
 
+
+
   node_config {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
@@ -67,11 +73,14 @@ resource "google_container_node_pool" "data_nodes" {
       value = "true"
       effect = "NO_SCHEDULE"
     }
+    kubelet_config {
+      cpu_manager_policy = "none" # Default value
+    }
 
     service_account = var.sa_email
 
     # preemptible  = true
-    machine_type = var.es_data_machine
+    machine_type = "e2-highmem-4"
     disk_size_gb = 20
     tags         = ["gke-node", "${var.project_id}-gke"]
     metadata = {
@@ -128,7 +137,7 @@ data "terraform_remote_state" "gke" {
 data "google_client_config" "default" {}
 
 provider "kubernetes" {
-  host = google_container_cluster.primary.endpoint
+  host = "https://${google_container_cluster.primary.endpoint}"
  
   token                  = data.google_client_config.default.access_token
   cluster_ca_certificate = base64decode(google_container_cluster.primary.master_auth[0].cluster_ca_certificate)

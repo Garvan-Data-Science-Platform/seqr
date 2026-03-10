@@ -34,6 +34,15 @@ resource "helm_release" "redis" {
   }
 
   set {
+    name = "image.tag"
+    value = "7.2.4"
+  }
+  set {
+    name = "image.repository"
+    value = "bitnamilegacy/redis"
+  }
+
+  set {
     name = "master.service.type"
     value = "LoadBalancer"
   }

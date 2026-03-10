@@ -27,6 +27,8 @@ resource "kubernetes_ingress_v1" "gke-ingress" {
         "kubernetes.io/ingress.global-static-ip-name"=google_compute_global_address.seqr-static.name
         "kubernetes.io/ingress.class"="gce"
         "ingress.gcp.kubernetes.io/pre-shared-cert"=module.base.ssl_cert
+        "networking.gke.io/ssl-redirect"=true
+        "networking.gke.io/v1beta1.FrontendConfig"="seqr-frontend-config"
     }
   }
 
